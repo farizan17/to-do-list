@@ -161,22 +161,31 @@
           const deadlineDate = new Date(task.deadline);
           const currentDate = new Date();
 
-          if (task.deadline && deadlineDate < currentDate) {
+          if (task.deadline) {
+            const timeDiff = currentDate - deadlineDate;
+            const daysLate = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+            const lateInfo =
+              deadlineDate < currentDate
+                ? `<br><span class="text-red-600 font-semibold">Terlambat ${
+                    daysLate > 0 ? `${daysLate} hari` : "Hari ini"
+                  }</span>`
+                : "";
+
             meta.innerHTML = `
-            Dibuat:  <span class="text-green-700">${new Date(
-              task.createdAt
-            ).toLocaleString()}</span><br>
-            Deadline: <span class="text-red-500">${deadlineDate.toLocaleString()}</span>
-          `;
+              Dibuat: <span class="text-green-700">${new Date(
+                task.createdAt
+              ).toLocaleString()}</span><br>
+              Deadline: <span class="text-red-500">${deadlineDate.toLocaleString()}</span>
+              ${lateInfo}
+            `;
           } else {
             meta.innerHTML = `
-            Dibuat: <span class="text-green-700">${new Date(
-              task.createdAt
-            ).toLocaleString()}</span><br>
-            Deadline: <span class="text-red-500"> ${
-              task.deadline ? deadlineDate.toLocaleString() : "Tidak ada"
-            }</span>
-          `;
+              Dibuat: <span class="text-green-700">${new Date(
+                task.createdAt
+              ).toLocaleString()}</span><br>
+              Deadline: <span class="text-gray-500">Tidak ada</span>
+            `;
           }
 
           contentBox.appendChild(title);
